@@ -1,12 +1,26 @@
-
 namespace FDP
 {
+    using System;
+    using System.Diagnostics;
+    using System.Xml.Serialization;
+    using System.Runtime.Serialization;
+    using System.Collections;
+    using System.Xml.Schema;
+    using System.ComponentModel;
+    using System.Globalization;
+    using System.Xml;
+    using System.IO;
+    using System.Text;
+    using System.ComponentModel.DataAnnotations;
+    using System.Collections.Generic;
+
+
     #region FractionDigitsAttribute
     public class FractionDigitsAttribute : ValidationAttribute
     {
         private readonly uint _decimalPrecision;
 
-        public FractionDigits(uint decimalPrecision)
+        public FractionDigitsAttribute(uint decimalPrecision)
         {
             _decimalPrecision = decimalPrecision;
         }
@@ -56,7 +70,7 @@ namespace FDP
         private readonly int _max;
         private readonly int _min;
 
-        public MaxDigits(int max, int min = 0)
+        public MaxDigitsAttribute(int max, int min = 0)
         {
             _max = max;
             _min = min;
@@ -88,9 +102,12 @@ namespace FDP
     /// <summary>
     /// Описание проекта освоения лесов
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
-    [XmlRoot(Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7", IsNullable = false)]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
+    [XmlRootAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0", IsNullable = false)]
     public class forestDevelopmentProject
     {
         private static XmlSerializer _serializerXml;
@@ -108,7 +125,7 @@ namespace FDP
         /// II. Организация использования лесов (по виду разрешенного использования лесов)
         /// </summary>
         public forestDevelopmentProjectForestUse forestUse { get; set; }
-        [XmlArrayItem(IsNullable = false)]
+        [XmlArrayItemAttribute(IsNullable = false)]
         public List<file> attachments { get; set; }
 
         /// <summary>
@@ -315,8 +332,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class serviceInfo
     {
         public string provider { get; set; }
@@ -335,8 +355,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class surveyWorkRow
     {
         public characteristicsWorkRow characteristics { get; set; }
@@ -344,9 +367,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
 
         /// <summary>
@@ -362,8 +385,11 @@ namespace FDP
     /// <summary>
     /// Характеристика и обоснование проектируемых видов и объемов работ
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class characteristicsWorkRow
     {
         /// <summary>
@@ -380,8 +406,11 @@ namespace FDP
         public string volume { get; set; }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class location
     {
         [XmlElement("cadastralNumber", typeof(string))]
@@ -391,7 +420,7 @@ namespace FDP
         [XmlElement("subforestry", typeof(reference))]
         [XmlElement("taxationUnit", typeof(string))]
         [XmlElement("tract", typeof(reference))]
-        [XmlChoiceIdentifier("ItemsElementName")]
+        [XmlChoiceIdentifierAttribute("ItemsElementName")]
         public object[] Items { get; set; }
         [XmlElement("ItemsElementName")]
         [XmlIgnore]
@@ -401,8 +430,11 @@ namespace FDP
     /// <summary>
     /// Ссылка на справочник (НСИ)
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class reference
     {
         /// <summary>
@@ -422,8 +454,9 @@ namespace FDP
         public string description { get; set; }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3", IncludeInSchema = false)]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3", IncludeInSchema = false)]
     public enum ItemsChoiceType
     {
         cadastralNumber,
@@ -438,12 +471,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class surveyWork
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<surveyWorkRow> table { get; set; }
 
         /// <summary>
@@ -459,20 +495,23 @@ namespace FDP
     /// <summary>
     /// Текстовое и графическое содержимое раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
     public class contentType
     {
         public descriptionType description { get; set; }
         /// <summary>
         /// Содержимое перед таблицей
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<contentRow> contentBeforeTable { get; set; }
         /// <summary>
         /// Содержимое после таблицы
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<contentRow> contentAfterTable { get; set; }
 
         /// <summary>
@@ -489,8 +528,11 @@ namespace FDP
     /// <summary>
     /// Описание раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
     public class descriptionType
     {
         /// <summary>
@@ -503,8 +545,11 @@ namespace FDP
         public string name { get; set; }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
     public class contentRow
     {
         [XmlElement("image", typeof(file))]
@@ -512,8 +557,11 @@ namespace FDP
         public object Item { get; set; }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class file
     {
         /// <summary>
@@ -541,8 +589,11 @@ namespace FDP
     /// <summary>
     /// Строка  местоположение проектируемых мероприятий
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class locationMeasureRow
     {
         /// <summary>
@@ -553,9 +604,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Год проведения
@@ -575,12 +626,15 @@ namespace FDP
     /// <summary>
     /// местоположение проектируемых мероприятий
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class locationMeasure
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<locationMeasureRow> table { get; set; }
 
         /// <summary>
@@ -596,17 +650,20 @@ namespace FDP
     /// <summary>
     /// Местоположение работ
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class locationWorkRow
     {
         public location location { get; set; }
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Вид проектируемых работ/технология
@@ -625,12 +682,15 @@ namespace FDP
     /// <summary>
     /// Местоположение работ
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class locationWork
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<locationWorkRow> table { get; set; }
 
         /// <summary>
@@ -643,8 +703,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class treeRegisterRow
     {
         /// <summary>
@@ -684,12 +747,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class treeRegister
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<treeRegisterRow> table { get; set; }
 
         /// <summary>
@@ -705,12 +771,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class characteristicsWork
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<characteristicsWorkRow> table { get; set; }
 
         /// <summary>
@@ -726,8 +795,11 @@ namespace FDP
     /// <summary>
     /// объем проектируемых мероприятий
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class volumeMeasureRow
     {
         /// <summary>
@@ -738,9 +810,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Единица измерения
@@ -749,9 +821,9 @@ namespace FDP
         /// <summary>
         /// Объем
         /// </summary>
-        [MaxDigits(15)]
-        [FractionDigits(4)]
-        [Range(0D, 9999999999.9999D)]
+        [MaxDigitsAttribute(15)]
+        [FractionDigitsAttribute(4)]
+        [RangeAttribute(0D, 9999999999.9999D)]
         public decimal volume { get; set; }
 
         /// <summary>
@@ -768,12 +840,15 @@ namespace FDP
     /// <summary>
     /// местоположение проектируемых мероприятий
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class volumeMeasure
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<volumeMeasureRow> table { get; set; }
 
         /// <summary>
@@ -789,17 +864,20 @@ namespace FDP
     /// <summary>
     /// Строка местоположения заготовки лесных ресурсов
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class locationResourceRow
     {
         public location location { get; set; }
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Вид ресурса
@@ -816,9 +894,9 @@ namespace FDP
         /// <summary>
         /// Объем заготовки
         /// </summary>
-        [MaxDigits(15)]
-        [FractionDigits(4)]
-        [Range(0D, 9999999999.9999D)]
+        [MaxDigitsAttribute(15)]
+        [FractionDigitsAttribute(4)]
+        [RangeAttribute(0D, 9999999999.9999D)]
         public decimal volume { get; set; }
 
         /// <summary>
@@ -835,12 +913,15 @@ namespace FDP
     /// <summary>
     /// местоположения заготовки лесных ресурсов
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class locationResource
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<locationResourceRow> table { get; set; }
 
         /// <summary>
@@ -856,8 +937,11 @@ namespace FDP
     /// <summary>
     /// Строка объема заготовки лесных ресурсов
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class volumeResourceRow
     {
         /// <summary>
@@ -871,9 +955,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Единица измерения
@@ -882,16 +966,16 @@ namespace FDP
         /// <summary>
         /// Фонд всего (ежегодный допустимый объем/норматив)
         /// </summary>
-        [MaxDigits(15)]
-        [FractionDigits(4)]
-        [Range(0D, 9999999999.9999D)]
+        [MaxDigitsAttribute(15)]
+        [FractionDigitsAttribute(4)]
+        [RangeAttribute(0D, 9999999999.9999D)]
         public decimal fund { get; set; }
         /// <summary>
         /// Проектируемые ежегодные объемы заготовки
         /// </summary>
-        [MaxDigits(15)]
-        [FractionDigits(4)]
-        [Range(0D, 9999999999.9999D)]
+        [MaxDigitsAttribute(15)]
+        [FractionDigitsAttribute(4)]
+        [RangeAttribute(0D, 9999999999.9999D)]
         public decimal fundAnnual { get; set; }
 
         /// <summary>
@@ -907,12 +991,15 @@ namespace FDP
     /// <summary>
     /// объема заготовки лесных ресурсов
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class volumeResource
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<volumeResourceRow> table { get; set; }
 
         /// <summary>
@@ -925,8 +1012,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class locationResourceResinRow
     {
         public location location { get; set; }
@@ -937,9 +1027,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Способ подсочки
@@ -948,9 +1038,9 @@ namespace FDP
         /// <summary>
         /// Выход живицы, кг/га
         /// </summary>
-        [MaxDigits(15)]
-        [FractionDigits(4)]
-        [Range(0D, 9999999999.9999D)]
+        [MaxDigitsAttribute(15)]
+        [FractionDigitsAttribute(4)]
+        [RangeAttribute(0D, 9999999999.9999D)]
         public decimal resinOutlet { get; set; }
 
         /// <summary>
@@ -966,12 +1056,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class locationResourceResin
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<locationResourceResinRow> table { get; set; }
 
         /// <summary>
@@ -984,59 +1077,65 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class volumeResourceResinRow
     {
         /// <summary>
         /// 1. Всего спелых и перестойных насаждений, пригодных для подсочки
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal useful { get; set; }
         /// <summary>
         /// 1.1. Из них не вовлечены в подсочку:
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal completion { get; set; }
         /// <summary>
         /// в том числе нерентабельные
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal unprofitable { get; set; }
         /// <summary>
         /// 2. Может ежегодно находиться в подсочке
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal maybe { get; set; }
         /// <summary>
         /// 3. Фактически находится в подсочке
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal used { get; set; }
         /// <summary>
         /// 4. Вышедшие из подсочки, всего
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal finished { get; set; }
     }
 
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class volumeResourceResin
     {
         public contentType content { get; set; }
@@ -1052,23 +1151,50 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class volumeResourceResinTable
     {
         public volumeResourceResinRow row { get; set; }
     }
 
+    /// <summary>
+    /// Ведомость лесотаксационных выделов, в которых проектируется заготовка древесины
+    /// </summary>
+
     [Serializable]
-    [XmlType(TypeName = "locationInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/locationCuttingsWoodType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "locationInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/locationCuttingsWoodType/4.2")]
     public class locationInfoRow2
     {
         public location location { get; set; }
+        /// <summary>
+        /// Преобладающая порода
+        /// </summary>
         public reference tree { get; set; }
+        /// <summary>
+        /// Форма рубки
+        /// </summary>
         public formCutting formCutting { get; set; }
+        /// <summary>
+        /// Указывается элемент справочника "Виды рубок"
+        /// </summary>
         public typeCuttingType typeCutting { get; set; }
+        /// <summary>
+        /// Указывается элемент справочника "Виды рубок"
+        /// </summary>
         public string descriptionCutting { get; set; }
+        /// <summary>
+        /// Планируемый способ лесовосстановления
+        /// </summary>
         public string reforestationMethod { get; set; }
+        /// <summary>
+        /// Всего на лесном участке
+        /// </summary>
         public resourcesType7 resources { get; set; }
 
         /// <summary>
@@ -1085,30 +1211,32 @@ namespace FDP
     /// <summary>
     /// Формы рубок
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/sTypes/4.3")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/sTypes/4.3")]
     public enum formCutting
     {
-        [XmlEnum("Сплошная рубка")]
+        [XmlEnumAttribute("Сплошная рубка")]
         Сплошнаярубка,
-        [XmlEnum("Выборочная рубка")]
+        [XmlEnumAttribute("Выборочная рубка")]
         Выборочнаярубка,
     }
 
     /// <summary>
     /// Виды рубок
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/sTypes/4.3")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/sTypes/4.3")]
     public enum typeCuttingType
     {
-        [XmlEnum("Рубка спелых и перестойных лесных насаждений")]
+        [XmlEnumAttribute("Рубка спелых и перестойных лесных насаждений")]
         Рубкаспелыхиперестойныхлесныхнасаждений,
-        [XmlEnum("Рубка при уходе за лесом")]
+        [XmlEnumAttribute("Рубка при уходе за лесом")]
         Рубкаприуходезалесом,
-        [XmlEnum("Вырубка погибших и поврежденных лесных насаждений")]
+        [XmlEnumAttribute("Вырубка погибших и поврежденных лесных насаждений")]
         Вырубкапогибшихиповрежденныхлесныхнасаждений,
-        [XmlEnum("Рубка лесных насаждений на лесных участках, предназначенных для строительства, ре" +
+        [XmlEnumAttribute("Рубка лесных насаждений на лесных участках, предназначенных для строительства, ре" +
             "конструкции и эксплуатации объектов лесной, лесоперерабатывающей инфраструктуры " +
             "и объектов, не связанных с созданием лесной инфраструктуры")]
         Рубкалесныхнасажденийналесныхучасткахпредназначенныхдлястроительствареконструкциииэксплуатацииобъектовлеснойлесоперерабатывающейинфраструктурыиобъектовнесвязанныхссозданиемлеснойинфраструктуры,
@@ -1117,16 +1245,19 @@ namespace FDP
     /// <summary>
     /// Ведомость лесотаксационных выделов, в которых проектируется заготовка древесины
     /// </summary>
+
     [Serializable]
-    [XmlType(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/locationCuttingsWoodType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/locationCuttingsWoodType/4.2")]
     public class resourcesType7
     {
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Запас средний на 1 га, м3
@@ -1139,17 +1270,20 @@ namespace FDP
         /// <summary>
         /// % выборки (для выборочных рубок спелых и перестойных лесных насаждений)
         /// </summary>
-        [FractionDigits(2)]
-        [MaxDigits(5)]
-        [Range(0D, 100D)]
+        [FractionDigitsAttribute(2)]
+        [MaxDigitsAttribute(5)]
+        [RangeAttribute(0D, 100D)]
         public decimal samplePercentage { get; set; }
     }
 
     /// <summary>
     /// Ведомость лесотаксационных выделов, в которых проектируется заготовка древесины
     /// </summary>
+
     [Serializable]
-    [XmlType(TypeName = "specialPurposeInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/locationCuttingsWoodType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "specialPurposeInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/locationCuttingsWoodType/4.2")]
     public class specialPurposeInfoRow4
     {
         /// <summary>
@@ -1160,7 +1294,7 @@ namespace FDP
         /// Целевое назначение лесов
         /// </summary>
         public specialPurposeType specialPurpose { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<locationInfoRow2> locationInfo { get; set; }
 
         /// <summary>
@@ -1176,38 +1310,43 @@ namespace FDP
     /// <summary>
     /// Виды целевого назначения лесов
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/sTypes/4.3")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/sTypes/4.3")]
     public enum specialPurposeType
     {
-        [XmlEnum("Защитные леса")]
+        [XmlEnumAttribute("Защитные леса")]
         Защитныелеса,
-        [XmlEnum("Эксплуатационные леса")]
+        [XmlEnumAttribute("Эксплуатационные леса")]
         Эксплуатационныелеса,
-        [XmlEnum("Резервные леса")]
+        [XmlEnumAttribute("Резервные леса")]
         Резервныелеса,
     }
 
     /// <summary>
     /// Ведомость лесотаксационных выделов, в которых проектируется заготовка древесины
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/locationCuttingsWoodType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/locationCuttingsWoodType/4.2")]
     public class locationCuttingsWoodType
     {
         /// <summary>
         /// Всего на лесном участке
         /// </summary>
         public resourcesType7 resources { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<specialPurposeInfoRow4> specialPurposeInfo { get; set; }
+        [XmlArrayItemAttribute("row", IsNullable = false)]
+        public List<locationInfoRow2> locationInfoOnAgriculturalLands { get; set; }
 
         /// <summary>
         /// locationCuttingsWoodType class constructor
         /// </summary>
         public locationCuttingsWoodType()
         {
-            specialPurposeInfo = new List<specialPurposeInfoRow4>();
             resources = new resourcesType7();
         }
     }
@@ -1215,8 +1354,11 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class locationCuttingsWood
     {
         public contentType content { get; set; }
@@ -1235,8 +1377,11 @@ namespace FDP
     /// <summary>
     /// Средняя характеристика по хозяйству
     /// </summary>
+
     [Serializable]
-    [XmlType(TypeName = "farmInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/volumeCuttingsWoodType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "farmInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/volumeCuttingsWoodType/4.2")]
     public class farmInfoRow2
     {
         /// <summary>
@@ -1257,8 +1402,9 @@ namespace FDP
     /// <summary>
     /// Справочник "Хозяйства"
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/sTypes/4.3")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/sTypes/4.3")]
     public enum farm
     {
         Мягколиственное,
@@ -1269,16 +1415,19 @@ namespace FDP
     /// <summary>
     /// Установленный объем заготовки древесины на лесном участке
     /// </summary>
+
     [Serializable]
-    [XmlType(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/volumeCuttingsWoodType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/volumeCuttingsWoodType/4.2")]
     public class resourcesType6
     {
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// запас (корневой), тыс. м3
@@ -1293,8 +1442,11 @@ namespace FDP
     /// <summary>
     /// Средняя характеристика по хозяйству
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/volumeCuttingsWoodType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/volumeCuttingsWoodType/4.2")]
     public class typeCuttingInfoRow
     {
         /// <summary>
@@ -1310,7 +1462,7 @@ namespace FDP
         /// </summary>
         public string descriptionCutting { get; set; }
         public resourcesType6 resources { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<farmInfoRow2> farmInfo { get; set; }
 
         /// <summary>
@@ -1326,8 +1478,11 @@ namespace FDP
     /// <summary>
     /// Установленный объем заготовки древесины на лесном участке
     /// </summary>
+
     [Serializable]
-    [XmlType(TypeName = "specialPurposeInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/volumeCuttingsWoodType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "specialPurposeInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/volumeCuttingsWoodType/4.2")]
     public class specialPurposeInfoRow3
     {
         /// <summary>
@@ -1338,7 +1493,7 @@ namespace FDP
         /// Всего на лесном участке
         /// </summary>
         public resourcesType6 resources { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<typeCuttingInfoRow> typeCuttingInfo { get; set; }
 
         /// <summary>
@@ -1354,17 +1509,20 @@ namespace FDP
     /// <summary>
     /// Установленный объем заготовки древесины на лесном участке
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/volumeCuttingsWoodType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/volumeCuttingsWoodType/4.2")]
     public class volumeCuttingsWoodType
     {
         /// <summary>
         /// Всего на лесном участке
         /// </summary>
         public resourcesType6 resources { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<specialPurposeInfoRow3> specialPurposeInfo { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<typeCuttingInfoRow> typeCuttingInfo { get; set; }
 
         /// <summary>
@@ -1373,7 +1531,6 @@ namespace FDP
         public volumeCuttingsWoodType()
         {
             typeCuttingInfo = new List<typeCuttingInfoRow>();
-            specialPurposeInfo = new List<specialPurposeInfoRow3>();
             resources = new resourcesType6();
         }
     }
@@ -1381,8 +1538,11 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class volumeCuttingsWood
     {
         public contentType content { get; set; }
@@ -1398,8 +1558,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class listProtectionRow
     {
         /// <summary>
@@ -1417,9 +1580,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Единица измерения
@@ -1443,12 +1606,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class listProtection
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<listProtectionRow> table { get; set; }
 
         /// <summary>
@@ -1461,8 +1627,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/areaForestCareType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/areaForestCareType/4.2")]
     public class treeRow
     {
         /// <summary>
@@ -1485,31 +1654,37 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/areaForestCareType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/areaForestCareType/4.2")]
     public class resourcesType5
     {
         /// <summary>
         /// Площадь лесов, нуждающихся в уходе за лесами га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Ежегодная площадь ухода за лесами, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal annualArea { get; set; }
     }
 
     /// <summary>
     /// Строка целевого назначения
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/areaForestCareType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/areaForestCareType/4.2")]
     public class farmRow
     {
         /// <summary>
@@ -1523,7 +1698,7 @@ namespace FDP
         /// <summary>
         /// Категория защитных лесов (только для защитных лесов)
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<treeRow> treeInfo { get; set; }
 
         /// <summary>
@@ -1536,15 +1711,18 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/areaForestCareType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/areaForestCareType/4.2")]
     public class areaForestCareType
     {
         /// <summary>
         /// Всего
         /// </summary>
         public resourcesType5 resources { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<farmRow> farmInfo { get; set; }
 
         /// <summary>
@@ -1560,8 +1738,11 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class areaForestCare
     {
         public contentType content { get; set; }
@@ -1577,8 +1758,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class listForestCareRow
     {
         /// <summary>
@@ -1596,9 +1780,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
 
         /// <summary>
@@ -1614,12 +1798,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class listForestCare
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<listForestCareRow> table { get; set; }
 
         /// <summary>
@@ -1632,8 +1819,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class listReforestationRow
     {
         /// <summary>
@@ -1647,9 +1837,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Планируемый способ лесовосстановления
@@ -1662,19 +1852,21 @@ namespace FDP
         public listReforestationRow()
         {
             location = new location();
-            landCategory = new reference();
         }
     }
 
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class listReforestation
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<listReforestationRow> table { get; set; }
 
         /// <summary>
@@ -1687,56 +1879,62 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/reforestationPlanType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/reforestationPlanType/4.2")]
     public class resourcesType4
     {
         /// <summary>
         /// Итого исскусственное
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal synthetic { get; set; }
         /// <summary>
         /// в т.ч. Посев
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal sowing { get; set; }
         /// <summary>
         /// в т.ч. Посадка
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal landing { get; set; }
         /// <summary>
         /// Комбинированное лесовосстановление
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal combined { get; set; }
         /// <summary>
         /// Естественное лесовосстановление
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal natural { get; set; }
         /// <summary>
         /// Всего
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal total { get; set; }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/reforestationPlanType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/reforestationPlanType/4.2")]
     public class landCategoryRow
     {
         /// <summary>
@@ -1755,14 +1953,17 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/reforestationPlanType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/reforestationPlanType/4.2")]
     public class reforestationPlanType
     {
         /// <summary>
         /// Информация по категориям земель
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<landCategoryRow> landCategoryInfo { get; set; }
         /// <summary>
         /// Итого
@@ -1787,8 +1988,11 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class reforestationPlan
     {
         public contentType content { get; set; }
@@ -1804,8 +2008,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class areaNeedReforestationRow
     {
         /// <summary>
@@ -1819,9 +2026,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
 
         /// <summary>
@@ -1837,12 +2044,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class areaNeedReforestation
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<areaNeedReforestationRow> table { get; set; }
 
         /// <summary>
@@ -1855,8 +2065,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class listTaxationUnitRadioactiveZoneRow
     {
         /// <summary>
@@ -1866,9 +2079,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Зона загрязнения (слабая, средняя, сильная)
@@ -1891,12 +2104,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class listTaxationUnitRadioactiveZone
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<listTaxationUnitRadioactiveZoneRow> table { get; set; }
 
         /// <summary>
@@ -1909,8 +2125,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class zonesRadioactiveContaminationRow
     {
         /// <summary>
@@ -1920,9 +2139,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Зона загрязнения (слабая, средняя, сильная)
@@ -1939,16 +2158,16 @@ namespace FDP
         /// <summary>
         /// Дозиметрический контроль при проведении лесохозяйственных работ
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal dosimetricControl { get; set; }
         /// <summary>
         /// Прочие защитные мероприятия
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal otherEvents { get; set; }
 
         /// <summary>
@@ -1963,12 +2182,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class zonesRadioactiveContamination
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<zonesRadioactiveContaminationRow> table { get; set; }
 
         /// <summary>
@@ -1981,8 +2203,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/sanitaryRecreationalMeasuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/sanitaryRecreationalMeasuresType/4.2")]
     public class sanritaryRecreationalMeasureRow
     {
         /// <summary>
@@ -2014,42 +2239,48 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/sanitaryRecreationalMeasuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/sanitaryRecreationalMeasuresType/4.2")]
     public class resourcesType3
     {
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Вырубаемый запас (общий), м3
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal volume { get; set; }
         /// <summary>
         /// Вырубаемый запас (ликвидный), м3
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal liquidVolume { get; set; }
         /// <summary>
         /// Вырубаемый запас (деловой), м3
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal businessVolume { get; set; }
     }
 
+
     [Serializable]
-    [XmlType(TypeName = "specialPurposeRow", Namespace = "http://rosleshoz.gov.ru/xmlns/sanitaryRecreationalMeasuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "specialPurposeRow", Namespace = "http://rosleshoz.gov.ru/xmlns/sanitaryRecreationalMeasuresType/4.2")]
     public class specialPurposeRow2
     {
         /// <summary>
@@ -2063,7 +2294,7 @@ namespace FDP
         /// <summary>
         /// Категория защитных лесов (только для защитных лесов)
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<sanritaryRecreationalMeasureRow> sanritaryRecreationalMeasureInfo { get; set; }
 
         /// <summary>
@@ -2076,15 +2307,18 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/sanitaryRecreationalMeasuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/sanitaryRecreationalMeasuresType/4.2")]
     public class sanitaryRecreationalMeasuresType
     {
         /// <summary>
         /// Всего
         /// </summary>
         public resourcesType3 resources { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<specialPurposeRow2> specialPurposeInfo { get; set; }
 
         /// <summary>
@@ -2100,8 +2334,11 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class sanitaryRecreationalMeasures
     {
         public contentType content { get; set; }
@@ -2117,8 +2354,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class damageDeathRow
     {
         /// <summary>
@@ -2136,16 +2376,16 @@ namespace FDP
         /// <summary>
         /// Площадь поврежденных и погибших насаждений нарастающим итогом, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal areaDamage { get; set; }
         /// <summary>
         /// Площадь погибших насаждений нарастающим итогом, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal areaDeath { get; set; }
 
         /// <summary>
@@ -2160,12 +2400,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class damageDeath
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<damageDeathRow> table { get; set; }
 
         /// <summary>
@@ -2178,8 +2421,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class fociHarmfulOrganismsRow
     {
         /// <summary>
@@ -2197,9 +2443,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Мероприятия, необходимые для ликвидации очагов вредных организмов
@@ -2208,23 +2454,23 @@ namespace FDP
         /// <summary>
         /// Общий запас
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal rootVolume { get; set; }
         /// <summary>
         /// Ликвидный запас
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal liquidVolume { get; set; }
         /// <summary>
         /// Деловой запас
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal commodityVolume { get; set; }
         /// <summary>
         /// Год проведения
@@ -2243,12 +2489,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class fociHarmfulOrganisms
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<fociHarmfulOrganismsRow> table { get; set; }
 
         /// <summary>
@@ -2261,28 +2510,41 @@ namespace FDP
         }
     }
 
+    /// <summary>
+    /// Строка целевого назначения
+    /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/preventionType/4.2")]
-    public class locationRow
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/preventionType/4.2")]
+    public class аgriculturalLandsRow
     {
         /// <summary>
-        /// Место расположения
+        /// Всего
         /// </summary>
-        public location location { get; set; }
         public resourcesType2 resources { get; set; }
+        /// <summary>
+        /// Категория защитных лесов (только для защитных лесов)
+        /// </summary>
+        [XmlArrayItemAttribute("row", IsNullable = false)]
+        public List<locationRow> locationInfo { get; set; }
 
         /// <summary>
-        /// locationRow class constructor
+        /// аgriculturalLandsRow class constructor
         /// </summary>
-        public locationRow()
+        public аgriculturalLandsRow()
         {
+            locationInfo = new List<locationRow>();
             resources = new resourcesType2();
-            location = new location();
         }
     }
 
+
     [Serializable]
-    [XmlType(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/preventionType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/preventionType/4.2")]
     public class resourcesType2
     {
         /// <summary>
@@ -2343,11 +2605,37 @@ namespace FDP
         public float usePheromonesAnnual { get; set; }
     }
 
+
+    [Serializable]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/preventionType/4.2")]
+    public class locationRow
+    {
+        /// <summary>
+        /// Место расположения
+        /// </summary>
+        public location location { get; set; }
+        public resourcesType2 resources { get; set; }
+
+        /// <summary>
+        /// locationRow class constructor
+        /// </summary>
+        public locationRow()
+        {
+            resources = new resourcesType2();
+            location = new location();
+        }
+    }
+
     /// <summary>
     /// Строка целевого назначения
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/preventionType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/preventionType/4.2")]
     public class specialPurposeRow
     {
         /// <summary>
@@ -2361,7 +2649,7 @@ namespace FDP
         /// <summary>
         /// Категория защитных лесов (только для защитных лесов)
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<locationRow> locationInfo { get; set; }
 
         /// <summary>
@@ -2374,22 +2662,31 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/preventionType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/preventionType/4.2")]
     public class preventionType
     {
         /// <summary>
         /// Всего
         /// </summary>
         public resourcesType2 resources { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<specialPurposeRow> specialPurposeInfo { get; set; }
+        /// <summary>
+        /// На землях сельскохозяйственного назначения
+        /// </summary>
+        [XmlArrayItemAttribute("row", IsNullable = false)]
+        public List<аgriculturalLandsRow> onAgriculturalLands { get; set; }
 
         /// <summary>
         /// preventionType class constructor
         /// </summary>
         public preventionType()
         {
+            onAgriculturalLands = new List<аgriculturalLandsRow>();
             specialPurposeInfo = new List<specialPurposeRow>();
             resources = new resourcesType2();
         }
@@ -2398,8 +2695,11 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class prevention
     {
         public contentType content { get; set; }
@@ -2415,8 +2715,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class fireEquipmentRow
     {
         /// <summary>
@@ -2456,12 +2759,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class fireEquipment
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<fireEquipmentRow> table { get; set; }
 
         /// <summary>
@@ -2474,8 +2780,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class designedFirePreventionRow
     {
         /// <summary>
@@ -2532,12 +2841,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class designedFirePrevention
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<designedFirePreventionRow> table { get; set; }
 
         /// <summary>
@@ -2550,8 +2862,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class characteristicWaterObjectsRow
     {
         /// <summary>
@@ -2565,9 +2880,9 @@ namespace FDP
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
 
         /// <summary>
@@ -2582,12 +2897,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class characteristicWaterObjects
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<characteristicWaterObjectsRow> table { get; set; }
 
         /// <summary>
@@ -2600,51 +2918,54 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/characteristicFireClassesType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/characteristicFireClassesType/4.2")]
     public class percentType
     {
         /// <summary>
         /// Площадь I класса пожарной опасности
         /// </summary>
-        [FractionDigits(2)]
-        [MaxDigits(5)]
-        [Range(0D, 100D)]
+        [FractionDigitsAttribute(2)]
+        [MaxDigitsAttribute(5)]
+        [RangeAttribute(0D, 100D)]
         public decimal areaFireClasses_I { get; set; }
         /// <summary>
         /// Площадь II класса пожарной опасности
         /// </summary>
-        [FractionDigits(2)]
-        [MaxDigits(5)]
-        [Range(0D, 100D)]
+        [FractionDigitsAttribute(2)]
+        [MaxDigitsAttribute(5)]
+        [RangeAttribute(0D, 100D)]
         public decimal areaFireClasses_II { get; set; }
         /// <summary>
         /// Площадь III класса пожарной опасности
         /// </summary>
-        [FractionDigits(2)]
-        [MaxDigits(5)]
-        [Range(0D, 100D)]
+        [FractionDigitsAttribute(2)]
+        [MaxDigitsAttribute(5)]
+        [RangeAttribute(0D, 100D)]
         public decimal areaFireClasses_III { get; set; }
         /// <summary>
         /// Площадь IV класса пожарной опасности
         /// </summary>
-        [FractionDigits(2)]
-        [MaxDigits(5)]
-        [Range(0D, 100D)]
+        [FractionDigitsAttribute(2)]
+        [MaxDigitsAttribute(5)]
+        [RangeAttribute(0D, 100D)]
         public decimal areaFireClasses_IV { get; set; }
         /// <summary>
         /// Площадь V класса пожарной опасности
         /// </summary>
-        [FractionDigits(2)]
-        [MaxDigits(5)]
-        [Range(0D, 100D)]
+        [FractionDigitsAttribute(2)]
+        [MaxDigitsAttribute(5)]
+        [RangeAttribute(0D, 100D)]
         public decimal areaFireClasses_V { get; set; }
         /// <summary>
         /// Площадь общая
         /// </summary>
-        [FractionDigits(2)]
-        [MaxDigits(5)]
-        [Range(0D, 100D)]
+        [FractionDigitsAttribute(2)]
+        [MaxDigitsAttribute(5)]
+        [RangeAttribute(0D, 100D)]
         public decimal area { get; set; }
 
         /// <summary>
@@ -2656,51 +2977,54 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/characteristicFireClassesType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/characteristicFireClassesType/4.2")]
     public class amountType
     {
         /// <summary>
         /// Площадь I класса пожарной опасности
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal areaFireClasses_I { get; set; }
         /// <summary>
         /// Площадь II класса пожарной опасности
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal areaFireClasses_II { get; set; }
         /// <summary>
         /// Площадь III класса пожарной опасности
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal areaFireClasses_III { get; set; }
         /// <summary>
         /// Площадь IV класса пожарной опасности
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal areaFireClasses_IV { get; set; }
         /// <summary>
         /// Площадь V класса пожарной опасности
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal areaFireClasses_V { get; set; }
         /// <summary>
         /// Площадь общая
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Средний класс
@@ -2708,8 +3032,11 @@ namespace FDP
         public string middleClass { get; set; }
     }
 
+
     [Serializable]
-    [XmlType(TypeName = "locationInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/characteristicFireClassesType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "locationInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/characteristicFireClassesType/4.2")]
     public class locationInfoRow1
     {
         public location location { get; set; }
@@ -2728,14 +3055,17 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/characteristicFireClassesType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/characteristicFireClassesType/4.2")]
     public class characteristicFireClassesType
     {
         /// <summary>
         /// местоположение
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<locationInfoRow1> locationInfo { get; set; }
         /// <summary>
         /// Всего
@@ -2760,8 +3090,11 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/measuresType/4.2")]
     public class characteristicFireClasses
     {
         public contentType content { get; set; }
@@ -2780,8 +3113,11 @@ namespace FDP
     /// <summary>
     /// Проектируемый объем и местоположение рубок лесных насаждений на лесном участке при использовании лесов не связанных с заготовкой древесины
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class volumeCuttingsRow
     {
         /// <summary>
@@ -2792,37 +3128,37 @@ namespace FDP
         /// <summary>
         /// Площадь объекта, строения, сооружения
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Корневой запас
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal rootVolume { get; set; }
         /// <summary>
         /// Корневой запас хвойных насаждений
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal rootConiferVolume { get; set; }
         /// <summary>
         /// Ликвидный запас
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal liquidVolume { get; set; }
         /// <summary>
         /// Ликвидный запас хвойных насаждений
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal liquidConiferVolume { get; set; }
         /// <summary>
         /// Год проведения
@@ -2842,12 +3178,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class volumeCuttings
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<volumeCuttingsRow> table { get; set; }
 
         /// <summary>
@@ -2860,17 +3199,20 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/objectsForestType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/objectsForestType/4.2")]
     public class locationInfoRow
     {
         public location location { get; set; }
         /// <summary>
         /// Площадь общая
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         public float length { get; set; }
         public reference measure { get; set; }
@@ -2890,8 +3232,11 @@ namespace FDP
     /// <summary>
     /// Таблица описания проектируемого объекта в лесном участке
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/objectsForestType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/objectsForestType/4.2")]
     public class objectsInfoRow
     {
         /// <summary>
@@ -2901,11 +3246,11 @@ namespace FDP
         /// <summary>
         /// Площадь объекта(га)
         /// </summary>
-        [FractionDigits(6)]
-        [MaxDigits(17)]
-        [Range(0D, 9999999999.9999981D)]
+        [FractionDigitsAttribute(6)]
+        [MaxDigitsAttribute(17)]
+        [RangeAttribute(0D, 9999999999.9999981D)]
         public decimal areaObject { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<locationInfoRow> locationInfo { get; set; }
 
         /// <summary>
@@ -2921,8 +3266,11 @@ namespace FDP
     /// <summary>
     /// 7. Сведения о наличии зданий, сооружений, объектов, связанных с созданием лесной инфраструктуры и объектов, не связанных с созданием лесной инфраструктуры на проектируемом лесном участке
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/objectsForestType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/objectsForestType/4.2")]
     public class objectsForestType
     {
         /// <summary>
@@ -2947,19 +3295,22 @@ namespace FDP
     /// <summary>
     /// Существующие объекты
     /// </summary>
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/objectsForestType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/objectsForestType/4.2")]
     public class objectsForestTypeExistingObjects
     {
         /// <summary>
         /// Объекты лесной инфраструктуры
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<objectsInfoRow> forestInfrastructure { get; set; }
         /// <summary>
         /// Объекты не связанные с созданием лесной инфраструктуры
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<objectsInfoRow> nonforestInfrastructure { get; set; }
 
         /// <summary>
@@ -2975,19 +3326,22 @@ namespace FDP
     /// <summary>
     /// Проектируемые объекты
     /// </summary>
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/objectsForestType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/objectsForestType/4.2")]
     public class objectsForestTypeProjectedObjects
     {
         /// <summary>
         /// Объекты лесной инфраструктуры
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<objectsInfoRow> forestInfrastructure { get; set; }
         /// <summary>
         /// Объекты не связанные с созданием лесной инфраструктуры
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<objectsInfoRow> nonforestInfrastructure { get; set; }
 
         /// <summary>
@@ -3003,8 +3357,11 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/forestUseType/4.2")]
     public class locationObject
     {
         public contentType content { get; set; }
@@ -3020,8 +3377,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class encumbrancesRow
     {
         /// <summary>
@@ -3037,12 +3397,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class encumbrances
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<encumbrancesRow> table { get; set; }
 
         /// <summary>
@@ -3055,8 +3418,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class surveysRow
     {
         /// <summary>
@@ -3072,12 +3438,15 @@ namespace FDP
     /// <summary>
     /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class surveys
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<surveysRow> table { get; set; }
 
         /// <summary>
@@ -3090,14 +3459,35 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class rarePlantsAnimalsRow
     {
+        /// <summary>
+        /// Расположение ООПТ
+        /// </summary>
         public location location { get; set; }
+        /// <summary>
+        /// Площадь, га
+        /// </summary>
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
+        /// <summary>
+        /// Вид, порода
+        /// </summary>
         public string species { get; set; }
+        /// <summary>
+        /// Ограничения
+        /// </summary>
         public string restrictions { get; set; }
+        /// <summary>
+        /// Основание для охраны
+        /// </summary>
         public string basisProtection { get; set; }
 
         /// <summary>
@@ -3110,14 +3500,17 @@ namespace FDP
     }
 
     /// <summary>
-    /// Сведения о наличии мест обитания редких и находящихся под угрозой исчезновения видов животных и мест произрастания редких и находящихся под угрозой исчезновения видов деревьев, кустарников, лиан и иных лесных растений
+    /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class rarePlantsAnimals
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<rarePlantsAnimalsRow> table { get; set; }
 
         /// <summary>
@@ -3130,14 +3523,32 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class contaminationRow
     {
         public location location { get; set; }
+        /// <summary>
+        /// Площадь, га
+        /// </summary>
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
+        /// <summary>
+        /// Вид загрязнения
+        /// </summary>
         public string typeContamination { get; set; }
+        /// <summary>
+        /// Единица измерения
+        /// </summary>
         public reference unitType { get; set; }
+        /// <summary>
+        /// Количественные показатели загрязнения
+        /// </summary>
         public string volume { get; set; }
 
         /// <summary>
@@ -3151,14 +3562,17 @@ namespace FDP
     }
 
     /// <summary>
-    /// Сведения о наличии загрязнения лесов (в том числе нефтяного, радиоактивного)
+    /// Тип описания раздела
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class contamination
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<contaminationRow> table { get; set; }
 
         /// <summary>
@@ -3171,8 +3585,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class speciallyProtectedNaturalAreasRow
     {
         public string speciallyProtectedNaturalArea { get; set; }
@@ -3184,12 +3601,15 @@ namespace FDP
     /// <summary>
     /// Характеристика имеющихся в границах лесного участка особо охраняемых природных территорий и объектов (границы и режим особой охраны), мероприятия по сохранению объектов биоразнообразия
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class speciallyProtectedNaturalAreas
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<speciallyProtectedNaturalAreasRow> table { get; set; }
 
         /// <summary>
@@ -3202,11 +3622,62 @@ namespace FDP
         }
     }
 
+
+    [Serializable]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+    public class characteristicsForestPlantationsLandPlotRow
+    {
+        public farm farm { get; set; }
+        public reference tree { get; set; }
+        public string composition { get; set; }
+        public float height { get; set; }
+        public string forestVegetationCover { get; set; }
+        public string crownDensityTreeTier { get; set; }
+        public string crownDensitysShrubTier { get; set; }
+
+        /// <summary>
+        /// characteristicsForestPlantationsLandPlotRow class constructor
+        /// </summary>
+        public characteristicsForestPlantationsLandPlotRow()
+        {
+            tree = new reference();
+        }
+    }
+
+    /// <summary>
+    /// Сведения о качественных и количественных характеристиках лесных насаждений на земельном участке из земель сельскохозяйственного назначения
+    /// </summary>
+
+    [Serializable]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+    public class characteristicsForestPlantationsLandPlot
+    {
+        public contentType content { get; set; }
+        [XmlArrayItemAttribute("row", IsNullable = false)]
+        public List<characteristicsForestPlantationsLandPlotRow> table { get; set; }
+
+        /// <summary>
+        /// characteristicsForestPlantationsLandPlot class constructor
+        /// </summary>
+        public characteristicsForestPlantationsLandPlot()
+        {
+            table = new List<characteristicsForestPlantationsLandPlotRow>();
+            content = new contentType();
+        }
+    }
+
     /// <summary>
     /// Средняя характеристика по преобладающим породам
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/averageTaxationRatesType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/averageTaxationRatesType/4.2")]
     public class treeInfoRow
     {
         /// <summary>
@@ -3228,16 +3699,19 @@ namespace FDP
     /// <summary>
     /// Средняя характеристика по лесному участку
     /// </summary>
+
     [Serializable]
-    [XmlType(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/averageTaxationRatesType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "resourcesType", Namespace = "http://rosleshoz.gov.ru/xmlns/averageTaxationRatesType/4.2")]
     public class resourcesType1
     {
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         /// <summary>
         /// Возраст насаждения
@@ -3254,26 +3728,26 @@ namespace FDP
         /// <summary>
         /// Средний запас насаждений покрытых лесной растительностью на 1 га, м.куб
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal volume { get; set; }
         /// <summary>
         /// Средний запас спелых и перестойных насаждений на 1 га, м.куб
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal ripeAndOverripe { get; set; }
         /// <summary>
         /// Средний прирост по запасу на 1 га, м.куб
         /// </summary>
-        [MaxDigits(10)]
-        [FractionDigits(2)]
-        [Range(0D, 9999999.99D)]
+        [MaxDigitsAttribute(10)]
+        [FractionDigitsAttribute(2)]
+        [RangeAttribute(0D, 9999999.99D)]
         public decimal growth { get; set; }
         /// <summary>
-        /// Состав насаждения
+        /// Лесной растительный покров
         /// </summary>
         public string composition { get; set; }
 
@@ -3287,13 +3761,16 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/averageTaxationRatesType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/averageTaxationRatesType/4.2")]
     public class farmInfoRow
     {
         public farm farm { get; set; }
         public resourcesType1 resources { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<treeInfoRow> treeInfo { get; set; }
 
         /// <summary>
@@ -3309,8 +3786,11 @@ namespace FDP
     /// <summary>
     /// Средняя характеристика по лесному участку
     /// </summary>
+
     [Serializable]
-    [XmlType(TypeName = "specialPurposeInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/averageTaxationRatesType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(TypeName = "specialPurposeInfoRow", Namespace = "http://rosleshoz.gov.ru/xmlns/averageTaxationRatesType/4.2")]
     public class specialPurposeInfoRow2
     {
         /// <summary>
@@ -3321,7 +3801,7 @@ namespace FDP
         /// Всего по лесному участку
         /// </summary>
         public resourcesType1 resources { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<farmInfoRow> farmInfo { get; set; }
 
         /// <summary>
@@ -3337,17 +3817,20 @@ namespace FDP
     /// <summary>
     /// Средняя характеристика по лесному участку
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/averageTaxationRatesType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/averageTaxationRatesType/4.2")]
     public class averageTaxationRatesType
     {
         /// <summary>
         /// Всего по лесному участку
         /// </summary>
         public resourcesType1 resources { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<specialPurposeInfoRow2> specialPurposeInfo { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<farmInfoRow> farmInfo { get; set; }
 
         /// <summary>
@@ -3364,8 +3847,11 @@ namespace FDP
     /// <summary>
     /// Таксационная характеристика лесных насаждений на лесном участке
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class averageTaxationRates
     {
         public contentType content { get; set; }
@@ -3381,8 +3867,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
     public class protectionCategoryInfoRow
     {
         /// <summary>
@@ -3404,22 +3893,28 @@ namespace FDP
     /// <summary>
     /// Детальная строка
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
     public class resourcesType
     {
         /// <summary>
         /// Площадь, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal area { get; set; }
         public decimal percent { get; set; }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
     public class groupInfoRow
     {
         /// <summary>
@@ -3429,7 +3924,7 @@ namespace FDP
         /// <summary>
         /// Категория защитных лесов
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<protectionCategoryInfoRow> protectionCategoryInfo { get; set; }
         public resourcesType resources { get; set; }
 
@@ -3446,29 +3941,33 @@ namespace FDP
     /// <summary>
     /// Группы категорий защитности
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
     public enum groupType
     {
-        [XmlEnum("леса, расположенные на особо охраняемых природных территориях")]
+        [XmlEnumAttribute("леса, расположенные на особо охраняемых природных территориях")]
         лесарасположенныенаособоохраняемыхприродныхтерриториях,
-        [XmlEnum("леса, расположенные в водоохранных зонах")]
+        [XmlEnumAttribute("леса, расположенные в водоохранных зонах")]
         лесарасположенныевводоохранныхзонах,
-        [XmlEnum("леса, выполняющие функции защиты природных и иных объектов")]
+        [XmlEnumAttribute("леса, выполняющие функции защиты природных и иных объектов")]
         лесавыполняющиефункциизащитыприродныхииныхобъектов,
-        [XmlEnum("ценные леса")]
+        [XmlEnumAttribute("ценные леса")]
         ценныелеса,
-        [XmlEnum("городские леса")]
+        [XmlEnumAttribute("городские леса")]
         городскиелеса,
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
     public class specialPurposeInfoRow
     {
         public specialPurposeType specialPurpose { get; set; }
         public resourcesType resources { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<groupInfoRow> groupInfo { get; set; }
 
         /// <summary>
@@ -3481,14 +3980,17 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/distributionSpecialPurposeType/4.2")]
     public class distributionSpecialPurposeType
     {
         /// <summary>
         /// Защитные леса
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<specialPurposeInfoRow> specialPurposeInfo { get; set; }
         /// <summary>
         /// Всего
@@ -3508,8 +4010,11 @@ namespace FDP
     /// <summary>
     /// Распределение площади лесного участка по видам целевого назначения лесов на защитные (по их категориям), эксплуатационные и резервные леса
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class distributionSpecialPurpose
     {
         public contentType content { get; set; }
@@ -3525,8 +4030,55 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+    public class listLandPlotsRow
+    {
+        public location location { get; set; }
+        public decimal area { get; set; }
+        public decimal areaCoveredForest { get; set; }
+
+        /// <summary>
+        /// listLandPlotsRow class constructor
+        /// </summary>
+        public listLandPlotsRow()
+        {
+            location = new location();
+        }
+    }
+
+    /// <summary>
+    /// Перечень земельных участков из земель сельскохозяйственного назначения, на которых осуществляется использование, охрана, защита, воспроизводство лесов
+    /// </summary>
+
+    [Serializable]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+    public class listLandPlots
+    {
+        public contentType content { get; set; }
+        [XmlArrayItemAttribute("row", IsNullable = false)]
+        public List<listLandPlotsRow> table { get; set; }
+
+        /// <summary>
+        /// listLandPlots class constructor
+        /// </summary>
+        public listLandPlots()
+        {
+            table = new List<listLandPlotsRow>();
+            content = new contentType();
+        }
+    }
+
+
+    [Serializable]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class listQuartersTaxationUnitRow
     {
         public location location { get; set; }
@@ -3544,12 +4096,15 @@ namespace FDP
     /// <summary>
     /// Перечень предоставленных в аренду, постоянное(бессрочное) пользование, в отношении которых установлен сервитут или публичный сервитут, лесных кварталов, лесотаксационных выделов или их частей
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/infoType/4.2")]
     public class listQuartersTaxationUnit
     {
         public contentType content { get; set; }
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<listQuartersTaxationUnitRow> table { get; set; }
 
         /// <summary>
@@ -3565,8 +4120,11 @@ namespace FDP
     /// <summary>
     /// Описание периода действия проекта
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
     public class usePeriodType
     {
         /// <summary>
@@ -3590,8 +4148,11 @@ namespace FDP
         public string amountDays { get; set; }
     }
 
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
     public class partnerListRow
     {
         public physicalPerson partner { get; set; }
@@ -3613,19 +4174,22 @@ namespace FDP
     /// <summary>
     /// Сведения о лесопользователе
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class physicalPerson
     {
         /// <summary>
         /// Имя
         /// </summary>
-        [MinLength(1)]
+        [MinLengthAttribute(1)]
         public string first_name { get; set; }
         /// <summary>
         /// Фамилия
         /// </summary>
-        [MinLength(1)]
+        [MinLengthAttribute(1)]
         public string last_name { get; set; }
         /// <summary>
         /// Отчество
@@ -3638,7 +4202,7 @@ namespace FDP
         /// <summary>
         /// ИНН физического лица (12 цифр)
         /// </summary>
-        [RegularExpression("([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{10}")]
+        [RegularExpressionAttribute("([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{10}")]
         public string inn { get; set; }
         /// <summary>
         /// Местонахождение
@@ -3661,8 +4225,11 @@ namespace FDP
     /// <summary>
     /// Документ, удостоверяющий личность
     /// </summary>
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class physicalPersonIdentity_document
     {
         /// <summary>
@@ -3683,8 +4250,11 @@ namespace FDP
     /// <summary>
     /// Описание правоустанавливающего документа
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class contract
     {
         public string type { get; set; }
@@ -3707,8 +4277,11 @@ namespace FDP
     /// <summary>
     /// Сотрудник
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class employee
     {
         /// <summary>
@@ -3749,8 +4322,11 @@ namespace FDP
     /// <summary>
     /// Данные подписи
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class signerData
     {
         /// <summary>
@@ -3781,19 +4357,22 @@ namespace FDP
     /// <summary>
     /// Сведения о лесопользователе
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class individualEntrepreneur
     {
         /// <summary>
         /// Имя
         /// </summary>
-        [MinLength(1)]
+        [MinLengthAttribute(1)]
         public string first_name { get; set; }
         /// <summary>
         /// Фамилия
         /// </summary>
-        [MinLength(1)]
+        [MinLengthAttribute(1)]
         public string last_name { get; set; }
         /// <summary>
         /// Отчество
@@ -3806,13 +4385,13 @@ namespace FDP
         /// <summary>
         /// Основной государственный регистрационный номер (13 или 15 цифр)
         /// </summary>
-        [RegularExpression("(1|5|2|3|4)([0-9]{12}|[0-9]{14})")]
+        [RegularExpressionAttribute("(1|5|2|3|4)([0-9]{12}|[0-9]{14})")]
         public string ogrn { get; set; }
         /// <summary>
         /// ИНН физического лица (12 цифр)
         /// </summary>
         [XmlElement(IsNullable = true)]
-        [RegularExpression("([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{10}")]
+        [RegularExpressionAttribute("([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{10}")]
         public string inn { get; set; }
         /// <summary>
         /// Местонахождение
@@ -3835,8 +4414,11 @@ namespace FDP
     /// <summary>
     /// Документ, удостоверяющий личность
     /// </summary>
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class individualEntrepreneurIdentity_document
     {
         /// <summary>
@@ -3857,24 +4439,27 @@ namespace FDP
     /// <summary>
     /// Сведения о лесопользователе
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class juridicalPerson
     {
         /// <summary>
         /// Наименование юридического лица (включая организационно-правовую форму)
         /// </summary>
-        [MinLength(1)]
+        [MinLengthAttribute(1)]
         public string name { get; set; }
         /// <summary>
         /// ИНН
         /// </summary>
-        [RegularExpression("([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{8}")]
+        [RegularExpressionAttribute("([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{8}")]
         public string inn { get; set; }
         /// <summary>
         /// Основной государственный регистрационный номер (13 или 15 цифр)
         /// </summary>
-        [RegularExpression("(1|5|2|3|4)([0-9]{12}|[0-9]{14})")]
+        [RegularExpressionAttribute("(1|5|2|3|4)([0-9]{12}|[0-9]{14})")]
         public string ogrn { get; set; }
         /// <summary>
         /// Местонахождение
@@ -3897,8 +4482,11 @@ namespace FDP
     /// <summary>
     /// Сведения о контрагенте
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/cTypes/4.3")]
     public class partner
     {
         [XmlElement("individualEntrepreneur", typeof(individualEntrepreneur))]
@@ -3910,8 +4498,11 @@ namespace FDP
     /// <summary>
     /// Организация (физ. лицо, ИП)
     /// </summary>
+
     [Serializable]
-    [XmlType(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
     public class descriptionPartner
     {
         [XmlElement("partner", typeof(partner))]
@@ -3931,12 +4522,15 @@ namespace FDP
     /// <summary>
     /// Перечень лесопользователей (Постановление Правительства РФ от 13 января 2017 г. N 5)
     /// </summary>
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/commonType/4.2")]
     public class descriptionPartnerPartnerList
     {
         [XmlElement("row")]
-        [Required()]
+        [RequiredAttribute()]
         public List<partnerListRow> row { get; set; }
 
         /// <summary>
@@ -3951,20 +4545,23 @@ namespace FDP
     /// <summary>
     /// Преамбула - титульный лист
     /// </summary>
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectPreamble
     {
         /// <summary>
-        /// Описание местоположения лесного участка
+        /// Описание местоположения лесного/земельного участка
         /// </summary>
         public string position { get; set; }
         /// <summary>
         /// Площадь лесного участка, га
         /// </summary>
-        [FractionDigits(8)]
-        [MaxDigits(20)]
-        [Range(0D, 100000000000D)]
+        [FractionDigitsAttribute(8)]
+        [MaxDigitsAttribute(20)]
+        [RangeAttribute(0D, 100000000000D)]
         public decimal totalArea { get; set; }
         /// <summary>
         /// Основание для предоставления лесного участка
@@ -3985,7 +4582,7 @@ namespace FDP
         /// <summary>
         /// Введение
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<contentRow> introduction { get; set; }
         /// <summary>
         /// Кадастровый номер лесного участка, номер учетной записи в государственном лесном реестре
@@ -4004,8 +4601,11 @@ namespace FDP
     /// <summary>
     /// I. Общие сведения
     /// </summary>
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectGeneral
     {
         /// <summary>
@@ -4051,7 +4651,7 @@ namespace FDP
         /// <summary>
         /// Комментарии к общим сведениям
         /// </summary>
-        [XmlArrayItem("row", IsNullable = false)]
+        [XmlArrayItemAttribute("row", IsNullable = false)]
         public List<contentRow> comments { get; set; }
         /// <summary>
         /// Сведения о лесном участке
@@ -4085,14 +4685,21 @@ namespace FDP
     /// <summary>
     /// Сведения о лесном участке
     /// </summary>
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectGeneralInfo
     {
         /// <summary>
         /// Перечень предоставленных в аренду, постоянное(бессрочное) пользование, в отношении которых установлен сервитут или публичный сервитут, лесных кварталов, лесотаксационных выделов или их частей
         /// </summary>
         public listQuartersTaxationUnit listQuartersTaxationUnit { get; set; }
+        /// <summary>
+        /// Перечень земельных участков из земель сельскохозяйственного назначения, на которых осуществляется использование, охрана, защита, воспроизводство лесов
+        /// </summary>
+        public listLandPlots listLandPlots { get; set; }
         /// <summary>
         /// Распределение площади лесного участка по видам целевого назначения лесов на защитные (по их категориям), эксплуатационные и резервные леса
         /// </summary>
@@ -4101,6 +4708,10 @@ namespace FDP
         /// Таксационная характеристика лесных насаждений на лесном участке
         /// </summary>
         public averageTaxationRates averageTaxationRates { get; set; }
+        /// <summary>
+        /// Сведения о качественных и количественных характеристиках лесных насаждений на земельном участке из земель сельскохозяйственного назначения
+        /// </summary>
+        public characteristicsForestPlantationsLandPlot characteristicsForestPlantationsLandPlot { get; set; }
         /// <summary>
         /// Характеристика имеющихся в границах лесного участка особо охраняемых природных территорий и объектов (границы и режим особой охраны), мероприятия по сохранению объектов биоразнообразия
         /// </summary>
@@ -4126,8 +4737,11 @@ namespace FDP
     /// <summary>
     /// I. Общие сведения
     /// </summary>
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectGeneralObjects
     {
         /// <summary>
@@ -4143,8 +4757,11 @@ namespace FDP
     /// <summary>
     /// I. Общие сведения
     /// </summary>
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectGeneralMeasures
     {
         /// <summary>
@@ -4199,9 +4816,9 @@ namespace FDP
         /// <summary>
         /// Ведомость лесотаксационных выделов, в которых планируются мероприятия по лесовосстановлению
         /// </summary>
-        public forestDevelopmentProjectGeneralMeasuresListReforestation listReforestation { get; set; }
+        public listReforestation listReforestation { get; set; }
         /// <summary>
-        /// Ведомость лесотаксационных выделов, в которых планируются мероприятия по лесовосстановлению
+        /// Ведомость лесотаксационных выделов (земельных участков из земель сельскохозяйственного назначения), в которых проектируются мероприятия по уходу за лесами
         /// </summary>
         public listForestCare listForestCare { get; set; }
         /// <summary>
@@ -4209,24 +4826,19 @@ namespace FDP
         /// </summary>
         public areaForestCare areaForestCare { get; set; }
         /// <summary>
-        /// Ведомость лесотаксационных выделов, в которых проектируются мероприятия по охране объектов животного и растительного мира, водных объектов
+        /// Ведомость лесотаксационных выделов (земельных участков из земель сельскохозяйственного назначения), в которых проектируются мероприятия по охране объектов животного и растительного мира, водных объектов
         /// </summary>
         public listProtection listProtection { get; set; }
-    }
-
-    [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
-    public class forestDevelopmentProjectGeneralMeasuresListReforestation : listReforestation
-    {
-        [XmlAttribute]
-        public string number { get; set; }
     }
 
     /// <summary>
     /// Описание проекта освоения лесов
     /// </summary>
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUse
     {
         public forestDevelopmentProjectForestUseWoodHarvesting woodHarvesting { get; set; }
@@ -4272,25 +4884,35 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseWoodHarvesting
     {
         public volumeCuttingsWood volumeCuttingsWood { get; set; }
+        public volumeCuttingsWood volumeCuttingsWoodOnAgriculturalLands { get; set; }
         public locationCuttingsWood locationCuttingsWood { get; set; }
+        public locationCuttingsWood locationCuttingsWoodOnAgriculturalLands { get; set; }
 
         /// <summary>
         /// forestDevelopmentProjectForestUseWoodHarvesting class constructor
         /// </summary>
         public forestDevelopmentProjectForestUseWoodHarvesting()
         {
+            locationCuttingsWoodOnAgriculturalLands = new locationCuttingsWood();
             locationCuttingsWood = new locationCuttingsWood();
+            volumeCuttingsWoodOnAgriculturalLands = new volumeCuttingsWood();
             volumeCuttingsWood = new volumeCuttingsWood();
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseResinHarvesting
     {
         public string technologies { get; set; }
@@ -4307,8 +4929,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseNonTimberResourcesHarvesting
     {
         public string technologies { get; set; }
@@ -4325,8 +4950,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseFoodForestrResourcesHarvesting
     {
         public string characteristics { get; set; }
@@ -4344,8 +4972,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseHunting
     {
         public volumeCuttings volumeCuttings { get; set; }
@@ -4361,8 +4992,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseAgriculture
     {
         public string technologies { get; set; }
@@ -4379,8 +5013,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseFishing
     {
         public characteristicsWork characteristicsWork { get; set; }
@@ -4396,8 +5033,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseResearchActivities
     {
         public characteristicsWork characteristicsWork { get; set; }
@@ -4413,8 +5053,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseRecreation
     {
         public treeRegister treeRegister { get; set; }
@@ -4434,8 +5077,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseForestPlantations
     {
         public characteristicsWork characteristicsWork { get; set; }
@@ -4451,8 +5097,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseForestNurseries
     {
         public characteristicsWork characteristicsWork { get; set; }
@@ -4468,8 +5117,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUsePlantGrowing
     {
         public characteristicsWork characteristicsWork { get; set; }
@@ -4485,8 +5137,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseGeology
     {
         public characteristicsWork characteristicsWork { get; set; }
@@ -4506,8 +5161,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseHydrology
     {
         public characteristicsWork characteristicsWork { get; set; }
@@ -4525,8 +5183,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseLinearObjects
     {
         public characteristicsWork characteristicsWork { get; set; }
@@ -4544,8 +5205,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseTimberProcessing
     {
         public characteristicsWork characteristicsWork { get; set; }
@@ -4563,8 +5227,11 @@ namespace FDP
         }
     }
 
+
     [Serializable]
-    [XmlType(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/4.7")]
+
+    [DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true, Namespace = "http://rosleshoz.gov.ru/xmlns/forestDevelopmentProject/5.0")]
     public class forestDevelopmentProjectForestUseSurveyWork
     {
         public surveyWork characteristicsWork { get; set; }
@@ -4578,3 +5245,4 @@ namespace FDP
         }
     }
 }
+#pragma warning restore
